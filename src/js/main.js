@@ -162,6 +162,35 @@ class FunnelGraph {
         return data.labels;
     }
 
+    static nFormatter(num, digits) {
+        if (typeof num === 'string') {
+            num = num.replace(/\D/g, '');
+        }
+        if (!num && isNaN(num)) {
+            return 0;
+        }
+        if (num < 0) {
+            num = 1000;
+        }
+        const si = [
+            { value: 1, symbol: '', digits: 1 },
+            { value: 1E3, symbol: 'K', digits: 1 },
+            { value: 1E6, symbol: 'm', digits: 1 },
+            { value: 1E9, symbol: 'b', digits: 1 },
+            { value: 1E12, symbol: 'T' },
+            { value: 1E15, symbol: 'P' },
+            { value: 1E18, symbol: 'E' }
+        ];
+        const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+        let i;
+        for (i = si.length - 1; i > 0; i--) {
+            if (num >= si[i].value) {
+                break;
+            }
+        }
+        return (num / si[i].value).toFixed(digits || si[i].digits).replace(rx, '$1') + si[i].symbol;
+    }
+
     addLabels() {
         const holder = document.createElement('div');
         holder.setAttribute('class', 'svg-funnel-js__labels');
@@ -178,7 +207,7 @@ class FunnelGraph {
             value.setAttribute('class', 'label__value');
 
             const valueNumber = this.is2d() ? this.getValues2d()[index] : this.values[index];
-            value.textContent = formatNumber(valueNumber);
+            value.textContent = FunnelGraph.nFormatter(valueNumber);
 
             const percentageValue = document.createElement('div');
             percentageValue.setAttribute('class', 'label__percentage');
