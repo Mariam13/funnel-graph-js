@@ -17,6 +17,7 @@ class FunnelGraph {
         this.labels = FunnelGraph.getLabels(options);
         this.subLabels = FunnelGraph.getSubLabels(options);
         this.values = FunnelGraph.getValues(options);
+        this.compareWithTop = options.compareWithTop;
         this.percentages = this.createPercentages();
         this.colors = options.data.colors || getDefaultColors(this.is2d() ? this.getSubDataSize() : 2);
         this.displayPercent = options.displayPercent || false;
@@ -181,7 +182,7 @@ class FunnelGraph {
 
             const percentageValue = document.createElement('div');
             percentageValue.setAttribute('class', 'label__percentage');
-            percentageValue.textContent = `${percentage.toString()}%`;
+            percentageValue.textContent = percentage ? `${percentage.toString()}%` : '';
 
             labelElement.appendChild(value);
             labelElement.appendChild(title);
@@ -326,8 +327,21 @@ class FunnelGraph {
             values = [...this.values];
         }
 
-        const max = Math.max(...values);
-        return values.map(value => (value === 0 ? 0 : roundPoint(value * 100 / max)));
+        const percentages = [];
+        for (let i = 0; i < values.length; i++) {
+            if (i === values.length - 1) {
+                percentages.push(0);
+                break;
+            }
+            let percent;
+            if (this.compareWithTop) {
+                percent = roundPoint(100 - (((values[0] - values[i + 1]) / values[0]) * 100));
+            } else {
+                percent = roundPoint(((values[i] - values[i + 1]) / values[i]) * 100);
+            }
+            percentages.push(percent);
+        }
+        return percentages;
     }
 
     applyGradient(svg, path, colors, index) {

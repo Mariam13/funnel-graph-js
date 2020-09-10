@@ -89,10 +89,6 @@ body {
 
 		.svg-funnel-js__label {
 			padding-left: 24px;
-
-			&:not(:first-child) {
-				border-left: 1px solid $secondary;
-			}
 		}
 	}
 

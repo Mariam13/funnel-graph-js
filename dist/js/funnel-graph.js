@@ -171,6 +171,7 @@ function () {
     this.labels = FunnelGraph.getLabels(options);
     this.subLabels = FunnelGraph.getSubLabels(options);
     this.values = FunnelGraph.getValues(options);
+    this.compareWithTop = options.compareWithTop;
     this.percentages = this.createPercentages();
     this.colors = options.data.colors || (0, _graph.getDefaultColors)(this.is2d() ? this.getSubDataSize() : 2);
     this.displayPercent = options.displayPercent || false;
@@ -329,7 +330,7 @@ function () {
         value.textContent = (0, _number.formatNumber)(valueNumber);
         var percentageValue = document.createElement('div');
         percentageValue.setAttribute('class', 'label__percentage');
-        percentageValue.textContent = "".concat(percentage.toString(), "%");
+        percentageValue.textContent = percentage ? "".concat(percentage.toString(), "%") : '';
         labelElement.appendChild(value);
         labelElement.appendChild(title);
 
@@ -462,10 +463,26 @@ function () {
         values = _toConsumableArray(this.values);
       }
 
-      var max = Math.max.apply(Math, _toConsumableArray(values));
-      return values.map(function (value) {
-        return value === 0 ? 0 : (0, _number.roundPoint)(value * 100 / max);
-      });
+      var percentages = [];
+
+      for (var i = 0; i < values.length; i++) {
+        if (i === values.length - 1) {
+          percentages.push(0);
+          break;
+        }
+
+        var percent = void 0;
+
+        if (this.compareWithTop) {
+          percent = (0, _number.roundPoint)(100 - (values[0] - values[i + 1]) / values[0] * 100);
+        } else {
+          percent = (0, _number.roundPoint)((values[i] - values[i + 1]) / values[i] * 100);
+        }
+
+        percentages.push(percent);
+      }
+
+      return percentages;
     }
   }, {
     key: "applyGradient",
