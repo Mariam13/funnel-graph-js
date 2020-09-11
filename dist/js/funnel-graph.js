@@ -330,7 +330,7 @@ function () {
         value.textContent = FunnelGraph.nFormatter(valueNumber);
         var percentageValue = document.createElement('div');
         percentageValue.setAttribute('class', 'label__percentage');
-        percentageValue.textContent = percentage ? "".concat(percentage.toString(), "%") : '';
+        percentageValue.textContent = percentage ? percentage < 0 || percentage > 100 ? '+100%' : "".concat(percentage.toString(), "%") : '';
         labelElement.appendChild(value);
         labelElement.appendChild(title);
 
@@ -642,6 +642,11 @@ function () {
   }, {
     key: "draw",
     value: function draw() {
+      if (this.container) {
+        this.updateData(this.data);
+        return;
+      }
+
       this.createContainer();
       this.makeSVG();
       this.addLabels();

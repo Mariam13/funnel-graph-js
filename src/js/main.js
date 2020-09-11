@@ -211,7 +211,9 @@ class FunnelGraph {
 
             const percentageValue = document.createElement('div');
             percentageValue.setAttribute('class', 'label__percentage');
-            percentageValue.textContent = percentage ? `${percentage.toString()}%` : '';
+            percentageValue.textContent = percentage
+                ? ((percentage < 0 || percentage > 100) ? '+100%' : `${percentage.toString()}%`)
+                : '';
 
             labelElement.appendChild(value);
             labelElement.appendChild(title);
@@ -523,6 +525,10 @@ class FunnelGraph {
     }
 
     draw() {
+        if (this.container) {
+            this.updateData(this.data);
+            return;
+        }
         this.createContainer();
         this.makeSVG();
 
