@@ -97,11 +97,9 @@ body {
 		padding-right: 16px;
 
 		.svg-funnel-js__label {
-			padding-top: 24px;
+			padding-top: 36px;
 
-			&:not(:first-child) {
-				border-top: 1px solid $secondary;
-			}
+			border-top: 1px solid $secondary;
 
 			.label__segment-percentages {
 				margin-top: 0;

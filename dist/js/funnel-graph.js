@@ -215,7 +215,7 @@ function () {
       var points = [];
       var fullDimension = this.isVertical() ? this.getHeight() : this.getWidth();
 
-      for (var i = 0; i <= size; i++) {
+      for (var i = 0; i <= (!this.isVertical() ? size - 1 : size); i++) {
         points.push((0, _number.roundPoint)(fullDimension * i / size));
       }
 
@@ -563,7 +563,9 @@ function () {
   }, {
     key: "getHeight",
     value: function getHeight() {
-      return this.height || this.graphContainer.clientHeight;
+      var height = this.height || this.graphContainer.clientHeight;
+      var itemHeight = height / this.values.length;
+      return this.isVertical() ? height - itemHeight : height;
     }
   }, {
     key: "getPathDefinitions",

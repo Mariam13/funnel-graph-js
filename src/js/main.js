@@ -57,7 +57,7 @@ class FunnelGraph {
         const size = this.getDataSize();
         const points = [];
         const fullDimension = this.isVertical() ? this.getHeight() : this.getWidth();
-        for (let i = 0; i <= size; i++) {
+        for (let i = 0; i <= (!this.isVertical() ? (size - 1) : size); i++) {
             points.push(roundPoint(fullDimension * i / size));
         }
         return points;
@@ -451,7 +451,9 @@ class FunnelGraph {
     }
 
     getHeight() {
-        return this.height || this.graphContainer.clientHeight;
+        const height = this.height || this.graphContainer.clientHeight;
+        const itemHeight = height / this.values.length;
+        return this.isVertical() ? (height - itemHeight) : height;
     }
 
     getPathDefinitions() {
