@@ -330,7 +330,7 @@ function () {
         value.textContent = FunnelGraph.nFormatter(valueNumber);
         var percentageValue = document.createElement('div');
         percentageValue.setAttribute('class', 'label__percentage');
-        percentageValue.textContent = percentage ? percentage < 0 || percentage > 100 ? '+100%' : "".concat(percentage.toString(), "%") : '';
+        percentageValue.textContent = percentage ? percentage < 0 || percentage > 100 ? '+100%' : "".concat(percentage.toString(), "%") : index !== _this.percentages.length - 1 ? '0%' : '';
         labelElement.appendChild(value);
         labelElement.appendChild(title);
 
@@ -476,7 +476,7 @@ function () {
         if (this.compareWithTop) {
           percent = (0, _number.roundPoint)(100 - (values[0] - values[i + 1]) / values[0] * 100);
         } else {
-          percent = (0, _number.roundPoint)((values[i] - values[i + 1]) / values[i] * 100);
+          percent = (0, _number.roundPoint)(values[i + 1] * 100 / values[i]);
         }
 
         percentages.push(percent);
@@ -642,7 +642,7 @@ function () {
   }, {
     key: "draw",
     value: function draw() {
-      if (this.container) {
+      if (this.container && this.container.classList.contains('svg-funnel-js')) {
         this.updateData(this.data);
         return;
       }
@@ -868,6 +868,12 @@ function () {
       if (typeof o.data !== 'undefined') {
         this.updateData(o.data);
       }
+    }
+  }, {
+    key: "destroy",
+    value: function destroy() {
+      this.container.classList.remove('svg-funnel-js');
+      this.container.innerHTML = '';
     }
   }], [{
     key: "getSubLabels",

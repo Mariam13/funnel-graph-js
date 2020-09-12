@@ -213,7 +213,7 @@ class FunnelGraph {
             percentageValue.setAttribute('class', 'label__percentage');
             percentageValue.textContent = percentage
                 ? ((percentage < 0 || percentage > 100) ? '+100%' : `${percentage.toString()}%`)
-                : '';
+                : (index !== this.percentages.length - 1 ? '0%' : '');
 
             labelElement.appendChild(value);
             labelElement.appendChild(title);
@@ -368,7 +368,7 @@ class FunnelGraph {
             if (this.compareWithTop) {
                 percent = roundPoint(100 - (((values[0] - values[i + 1]) / values[0]) * 100));
             } else {
-                percent = roundPoint(((values[i] - values[i + 1]) / values[i]) * 100);
+                percent = roundPoint((values[i + 1] * 100) / values[i]);
             }
             percentages.push(percent);
         }
@@ -525,7 +525,7 @@ class FunnelGraph {
     }
 
     draw() {
-        if (this.container) {
+        if (this.container && this.container.classList.contains('svg-funnel-js')) {
             this.updateData(this.data);
             return;
         }
@@ -729,6 +729,11 @@ class FunnelGraph {
         if (typeof o.data !== 'undefined') {
             this.updateData(o.data);
         }
+    }
+
+    destroy() {
+        this.container.classList.remove('svg-funnel-js');
+        this.container.innerHTML = '';
     }
 }
 
